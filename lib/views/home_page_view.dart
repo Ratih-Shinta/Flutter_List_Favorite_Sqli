@@ -40,7 +40,7 @@ class HomePageView extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                         image: DecorationImage(
                           // image: CachedNetworkImageProvider(product.url),
-                          image: AssetImage('assets/webcam-toy-photo43.jpg'),
+                          image: Image.network(product.url!).image,
                           fit: BoxFit.cover,
                         ),
                       ),

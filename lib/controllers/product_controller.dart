@@ -11,7 +11,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class ProductController extends GetxController {
-    String dbName = "db_user";
+  String dbName = "db_user";
   int dbVersion = 1;
 
   String favoriteTable = "favorite_table";
@@ -23,7 +23,7 @@ class ProductController extends GetxController {
   Database? database;
   var isLoading = true.obs;
   RxList allPhotos = [].obs;
-  RxList<FavoritePhoto> favorite = <FavoritePhoto>[].obs;
+  RxList favorite = <FavoritePhoto>[].obs;
   RxList<FavoritePhoto> favoritesPhoto = <FavoritePhoto>[].obs;
 
   @override
@@ -38,7 +38,7 @@ class ProductController extends GetxController {
   //     "BJl0ap1V86KsHfXbjGfPS9qRjGvuyahozrf277axY6w927Ym7ph94blu";
 
   Future<void> getAllPhotos() async {
-    try {
+    try { 
       final response = await http.get(
         Uri.parse('https://api.pexels.com/v1/search?query=nature'),
         headers: {
@@ -51,6 +51,7 @@ class ProductController extends GetxController {
         final content = json.decode(response.body)['photos'];
         for (var item in content) {
           allPhotos.add(Photo.fromJson(item));
+          print(allPhotos);
         }
       } else {
         print('Error: ${response.statusCode}');
@@ -112,8 +113,8 @@ class ProductController extends GetxController {
         favoritesPhoto.add(FavoritePhoto.fromJson(maps[i]));
       }
     }
-    favorite.assignAll(favoritesPhoto); // Menggunakan assignAll untuk mengisi nilai favorites
-    return favoritesPhoto; // Mengembalikan nilai favoritesMovie
+    favorite.assignAll(favoritesPhoto);
+    return favoritesPhoto;
   }
 
   // Future<List<FavoritePhoto>> getFavorites() async {
@@ -145,15 +146,14 @@ class ProductController extends GetxController {
   }
 
   bool isFavorite(int id) {
-  // Cek apakah item dengan ID tertentu sudah ada dalam daftar favorit atau tidak
-  for (FavoritePhoto favoritePhoto in favorite) {
-    if (favoritePhoto.id == id) {
-      return true; // Item sudah ada dalam daftar favorit
+    // Cek apakah item dengan ID tertentu sudah ada dalam daftar favorit atau tidak
+    for (FavoritePhoto favoritePhoto in favorite) {
+      if (favoritePhoto.id == id) {
+        return true; // Item sudah ada dalam daftar favorit
+      }
     }
+    return false; // Item belum ada dalam daftar favorit
   }
-  return false; // Item belum ada dalam daftar favorit
-}
-
 
   // Future<void> delete(int id) async {
   //   String table = "user";
@@ -182,4 +182,3 @@ class ProductController extends GetxController {
   //   return user;
   // }
 }
-

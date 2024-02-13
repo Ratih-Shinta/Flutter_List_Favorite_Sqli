@@ -1,12 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_list_favorite_sqli/controllers/product_controller.dart';
 
-List<ProductModel> productModelFromJson(String str) =>
-    List<ProductModel>.from(
-        json.decode(str).map((x) => ProductModel.fromJson(x)));
+// List<ProductModel> productModelFromJson(String str) => List<ProductModel>.from(
+//     json.decode(str).json((x) => ProductModel.fromJson(x)));
 
-String productModelToJson(List<ProductModel> data) =>
+// String productModelToJson(List<ProductModel> data) =>
+//     json.encode(List<dynamic>.from(data.json((x) => x.toJson())));
+
+List<ProductModel> productFromJson(String str) => List<ProductModel>.from(
+    json.decode(str).map((x) => ProductModel.fromJson(x)));
+
+String productToJson(List<ProductModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ProductModel {
@@ -39,15 +45,15 @@ class ProductModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-        data ['page'] = this.page;
-        data ['per_page'] = this.perPage;
-        if (this.photos != null) {
-          data['results'] = this.photos!.map((v) => v.toJson()).toList();
-        }
-        data ['total_Results'] = this.totalResults;
-        data ['nextPage'] = this.nextPage;
-        return data;
-      }
+    data['page'] = this.page;
+    data['per_page'] = this.perPage;
+    if (this.photos != null) {
+      data['results'] = this.photos!.map((v) => v.toJson()).toList();
+    }
+    data['total_Results'] = this.totalResults;
+    data['nextPage'] = this.nextPage;
+    return data;
+  }
 }
 
 class Photo {
@@ -78,34 +84,34 @@ class Photo {
   });
 
   Photo.fromJson(Map<String, dynamic> json) {
-      id = json['id'];
-      width = json['width'];
-      height = json['height'];
-      url = json['url'];
-      photographer = json['photographer'];
-      photographerUrl = json['photographer_url'];
-      photographerId = json['photographer_id'];
-      avgColor = json['avg_color'];
-      src = Src.fromJson(json['src']);
-      liked = json['liked'];
-      alt = json['alt'];
+    id = json['id'];
+    width = json['width'];
+    height = json['height'];
+    url = json['url'];
+    photographer = json['photographer'];
+    photographerUrl = json['photographer_url'];
+    photographerId = json['photographer_id'];
+    avgColor = json['avg_color'];
+    src = Src.fromJson(json['src']);
+    liked = json['liked'];
+    alt = json['alt'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-        data ['id'] = this.id;
-        data ['width'] = this.width;
-        data ['height'] = this.height;
-        data ['url'] = this.url;
-        data ['photographer'] = this.photographer;
-        data ['photographer_url'] = this.photographerUrl;
-        data ['photographer_id'] = this.photographerId;
-        data ['avg_color'] = this.avgColor;
-        data ['src'] = this.src;
-        data ['liked'] = this.liked;
-        data ['alt'] = this.alt;
-        return data;
-      }
+    data['id'] = this.id;
+    data['width'] = this.width;
+    data['height'] = this.height;
+    data['url'] = this.url;
+    data['photographer'] = this.photographer;
+    data['photographer_url'] = this.photographerUrl;
+    data['photographer_id'] = this.photographerId;
+    data['avg_color'] = this.avgColor;
+    data['src'] = this.src;
+    data['liked'] = this.liked;
+    data['alt'] = this.alt;
+    return data;
+  }
 }
 
 class Src {
@@ -130,14 +136,14 @@ class Src {
   });
 
   Src.fromJson(Map<String, dynamic> json) {
-      original = json['original'];
-      large2X = json['large2X'];
-      large = json['large'];
-      medium = json['medium'];
-      small = json['small'];
-      portrait = json['portrait'];
-      landscape = json['landscape'];
-      tiny = json['tiny'];
+    original = json['original'];
+    large2X = json['large2X'];
+    large = json['large'];
+    medium = json['medium'];
+    small = json['small'];
+    portrait = json['portrait'];
+    landscape = json['landscape'];
+    tiny = json['tiny'];
   }
 
   Map<String, dynamic> toJson() {
@@ -165,58 +171,112 @@ class FavoritePhoto {
   String? photographer;
 
   FavoritePhoto({
-    required this.id,
-    required this.url,
-    required this.alt,
-    required this.photographer,
+    this.id,
+    this.url,
+    this.alt,
+    this.photographer,
   });
 
-  FavoritePhoto.fromJson(Map<String, dynamic> json) {
-      id = json['id'];
-      url = json['url'];
-      alt = json['alt'];
-      photographer = json['photographer'];
+  factory FavoritePhoto.fromJson(Map<String, dynamic> json) {
+    return FavoritePhoto(
+      id: json['id'],
+      url: json['url'],
+      alt: json['alt'],
+      photographer: json['photographer'],
+    );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-        data ['id'] = this.id;
-        data ['url'] = this.url;
-        data ['alt'] = this.alt;
-        data ['photographer'] = this.photographer;
-        return data;
-      }
+    return {
+      'id': id,
+      'url': url,
+      'alt': alt,
+      'photographer': photographer,
+    };
+  }
 }
 
+// class FavoritePhoto {
+//   bool isFav(ProductController productController) {
+//     return productController.favorite.contains(id);
+//   }
 
-// class ProductColor {
-//   String hexValue;
-//   String colourName;
+//   final int id;
+//   final String url;
+//   final String alt;
+//   final String photographer;
 
-//   ProductColor({
-//     required this.hexValue,
-//     required this.colourName,
+//   FavoritePhoto({
+//     required this.id,
+//     required this.url,
+//     required this.alt,
+//     required this.photographer,
 //   });
 
-//   factory ProductColor.fromJson(Map<String, dynamic> json) => ProductColor(
-//     hexValue: json["hex_value"],
-//     colourName: json["colour_name"] == null?"" :  json["colour_name"] ,
-//   );
+//   Map<String, dynamic> toMap() {
+//     return {
+//       'id': id,
+//       'url': url,
+//       'alt': alt,
+//       'photographer': photographer,
+//     };
+//   }
 
-//   Map<String, dynamic> toJson() => {
-//     "hex_value": hexValue,
-//     "colour_name": colourName,
-//   };
+//   factory FavoritePhoto.fromMap(Map<String, dynamic> json) {
+//     return FavoritePhoto(
+//       id: json['id'],
+//       url: json['url'],
+//       alt: json['alt'],
+//       photographer: json['photographer'],
+//     );
+//   }
 // }
 
-// class EnumValues<T> {
-//   Map<String, T> map;
-//   late Map<T, String> reverseMap;
+// class FavoritePhoto {
+//   bool isFav(ProductController productController) {
+//     return productController.favorite.contains(id);
+//   }
 
-//   EnumValues(this.map);
+//   final int id;
+//   final String title;
+//   final String overview;
+//   final String posterPath;
+//   final String backdropPath;
+//   final String releaseDate;
+//   final double voteAverage;
 
-//   Map<T, String> get reverse {
-//     reverseMap = map.map((k, v) => MapEntry(v, k));
-//     return reverseMap;
+//   FavoritePhoto({
+//     required this.id,
+//     required this.title,
+//     required this.overview,
+//     required this.posterPath,
+//     required this.backdropPath,
+//     required this.releaseDate,
+//     required this.voteAverage,
+//   });
+
+//   Map<String, dynamic> toMap() {
+//     return {
+//       'id': id,
+//       'title': title,
+//       'overview': overview,
+//       'posterPath': posterPath,
+//       'backdropPath': backdropPath,
+//       'releaseDate': releaseDate,
+//       'voteAverage': voteAverage,
+//     };
+//   }
+
+//   factory FavoritePhoto.fromMap(Map<String, dynamic> map) {
+//     return FavoritePhoto(
+//       id: map['id'],
+//       title: map['title'],
+//       overview: map['overview'],
+//       posterPath: map['posterPath'],
+//       backdropPath: map['backdropPath'],
+//       releaseDate: map['releaseDate'],
+//       voteAverage: map['voteAverage'],
+//     );
 //   }
 // }
