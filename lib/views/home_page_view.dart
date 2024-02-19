@@ -4,7 +4,6 @@ import 'package:flutter_list_favorite_sqli/models/product_model.dart';
 import 'package:flutter_list_favorite_sqli/views/favorite_page_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePageView extends StatelessWidget {
   final productController = Get.put(ProductController());
@@ -21,6 +20,15 @@ class HomePageView extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.favorite),
+            color: Colors.red,
+            onPressed: () {
+              Get.to(FavoritePageView());
+            },
+          ),
+        ],
         centerTitle: true,
         elevation: 0,
       ),
@@ -39,133 +47,111 @@ class HomePageView extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                         image: DecorationImage(
-                          // image: CachedNetworkImageProvider(product.url),
-                          image: Image.network(product.url!).image,
+                          image: NetworkImage(product.src!),
                           fit: BoxFit.cover,
                         ),
                       ),
                       // width: MediaQuery.of(context).size.width * 0.4,
                       height: MediaQuery.of(context).size.height * 0.35,
-                      child: Stack(
-                        children: [
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: MediaQuery.of(context).size.height * 0.06,
-                              padding: EdgeInsets.only(left: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(15),
-                                  bottomRight: Radius.circular(15),
-                                ),
-                                gradient: LinearGradient(
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
-                                  colors: [
-                                    Colors.black.withOpacity(0.8),
-                                    Colors.black.withOpacity(0.6),
-                                    Colors.black.withOpacity(0.0),
-                                  ],
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.06,
+                          padding: EdgeInsets.only(left: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15),
+                            ),
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.8),
+                                Colors.black.withOpacity(0.6),
+                                Colors.black.withOpacity(0.0),
+                              ],
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Text(
+                                    //   "This is the example of TextOverflow ellipsis, In the end there are the dots",
+                                    //   overflow: TextOverflow.ellipsis,
+                                    // ),
+                                    Flexible(
+                                      child: Text(
                                         product.alt,
-                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                          color: Colors.white, // Warna teks
+                                          color: Colors.white,
                                           fontSize: 15,
                                         ),
                                       ),
-                                      Text(
-                                        product.photographer,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Colors.white, // Warna teks
-                                          fontSize: 10,
-                                        ),
+                                    ),
+                                    Text(
+                                      product.photographer,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
                                       ),
-                                    ],
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      // Memeriksa apakah produk sudah ada dalam daftar favorit atau tidak
-                                      if (!productController
-                                          .isFavorite(product.id)) {
-                                        Get.snackbar(
-                                          'Saved',
-                                          '${product.alt!} has been saved to favorite',
-                                          snackPosition: SnackPosition.TOP,
-                                          colorText: Colors.black,
-                                        );
-                                        FavoritePhoto favoritePhoto =
-                                            FavoritePhoto(
-                                          id: product.id,
-                                          url: product.url,
-                                          alt: product.alt,
-                                          photographer: product.photographer,
-                                        );
-                                        productController
-                                            .saveData(favoritePhoto);
-                                      } else {
-                                        // Menampilkan pesan jika produk sudah ada dalam daftar favorit
-                                        Get.snackbar(
-                                          'Already Saved',
-                                          '${product.alt!} is already in favorite',
-                                          snackPosition: SnackPosition.TOP,
-                                          colorText: Colors.black,
-                                        );
-                                      }
-                                    },
-                                    icon: Icon(Icons.favorite_border_outlined,
-                                        color: Colors.white, size: 25),
-                                  ),
-                                ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                              IconButton(
+                                onPressed: () {
+                                  if (!productController
+                                      .isFavorite(product.id)) {
+                                    Get.snackbar(
+                                      'Saved',
+                                      '${product.alt!} has been saved to favorite',
+                                      snackPosition: SnackPosition.TOP,
+                                      colorText: Colors.black,
+                                    );
+                                    Photo favoritePhoto = Photo(
+                                      id: product.id,
+                                      photographer: product.photographer,
+                                      alt: product.alt,
+                                      src: product.src,
+                                    );
+                                    productController.saveData(favoritePhoto);
+                                  } else {
+                                    Get.snackbar(
+                                      'Already Saved',
+                                      '${product.alt!} is already in favorite',
+                                      snackPosition: SnackPosition.TOP,
+                                      colorText: Colors.black,
+                                    );
+                                  }
+                                },
+                                icon: Icon(Icons.favorite_border_outlined,
+                                    color: Colors.white, size: 25),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     );
                   },
                 ),
               );
       }),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.transparent,
-        onPressed: () {
-          Get.to(FavoritePageView());
-        },
-        child: Container(
-          width: 200,
-          height: 200,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.red,
-          ),
-          child: Icon(
-            Icons.favorite,
-            color: Colors.white,
-          ),
-        ),
-      ),
     );
   }
 
-  Widget _buildProductImage(String url) {
-    return CachedNetworkImage(
-      imageUrl: url,
-      placeholder: (context, url) => CircularProgressIndicator(),
-      errorWidget: (context, url, error) => Icon(Icons.error),
-    );
-  }
+  // Widget _buildProductImage(String url) {
+  //   return CachedNetworkImage(
+  //     imageUrl: url,
+  //     placeholder: (context, url) => CircularProgressIndicator(),
+  //     errorWidget: (context, url, error) => Icon(Icons.error),
+  //   );
+  // }
 }

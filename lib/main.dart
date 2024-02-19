@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_list_favorite_sqli/views/favorite_page_view.dart';
 import 'package:flutter_list_favorite_sqli/views/home_page_view.dart';
 import 'package:get/get.dart';
 
